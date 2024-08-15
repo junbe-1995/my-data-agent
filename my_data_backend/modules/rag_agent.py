@@ -1,8 +1,10 @@
 from typing import Optional
-from langchain_openai import ChatOpenAI
-from langchain.chains.combine_documents import create_stuff_documents_chain
+
 from langchain.chains import create_retrieval_chain
-from langchain_core.prompts import ChatPromptTemplate
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_openai import ChatOpenAI
+
+from my_data_backend.modules.prompt_template import PromptTemplateSingleton
 
 
 class RAGAgentSingleton:
@@ -34,13 +36,7 @@ class RAGAgentSingleton:
         llm = ChatOpenAI(model=model_name, temperature=0.2, max_tokens=max_tokens)
 
         # 프롬프트 템플릿 설정
-        prompt_template = ChatPromptTemplate.from_template(
-            "You are an expert in API specifications. Based on the following retrieved documents from the API specification:\n\n"
-            "{context}\n\n"
-            "Please provide a clear and concise explanation of what the term '{input}' specifically refers to in the context of the provided API specifications. "
-            "Ensure your answer is directly related to the provided documents and gives an accurate definition or explanation. "
-            "Avoid unnecessary details, including repeating the query, and respond in Korean."
-        )
+        prompt_template = PromptTemplateSingleton().get_template()
 
         # create_stuff_documents_chain을 이용해 CombineDocumentsChain 생성
         combine_documents_chain = create_stuff_documents_chain(

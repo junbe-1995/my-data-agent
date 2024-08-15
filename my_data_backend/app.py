@@ -7,6 +7,7 @@ from _version import __version__
 from .config import config
 from .middlewares.custom_middle_wares import CustomMiddleware
 from .modules.pdf_loader import load_pdfs_async
+from .modules.prompt_template import PromptTemplateSingleton
 from .modules.rag_agent import RAGAgentSingleton
 from .modules.vector_store import create_vectorstore, load_vectorstore
 
@@ -31,15 +32,13 @@ async def startup_event():
 
     # 초기화 단계에서 벡터스토어 로드 및 agent 초기화
     vectorstore = await initialize_vectorstore()
-
-    query = "API 스펙 중 aNS는 어떤 것을 뜻하나요?"
-    results = vectorstore.similarity_search(query, k=5)
-    for i, result in enumerate(results, 1):
-        print(f"Result {i}: {result.page_content}")
+    PromptTemplateSingleton().initialize()
 
     rag_agent = RAGAgentSingleton()
     rag_agent.initialize(
-        vectorstore=vectorstore, model_name=config.LLM_MODEL_NAME, top_k=3
+        vectorstore=vectorstore,
+        model_name=config.LLM_MODEL_NAME,
+        top_k=config.VECTOR_SEARCH_TOP_K,
     )
 
     app.include_router(router)
@@ -57,11 +56,13 @@ async def initialize_vectorstore():
     # 벡터스토어가 이미 존재하는지 확인
     if os.path.exists(vectorstore_path):
         # 기존 벡터스토어 로드
-        vectorstore = load_vectorstore(vectorstore_path, use_pinecone=False)
+        vectorstore = load_vectorstore(
+            vectorstore_path, use_pinecone=config.USE_PINECONE
+        )
     else:
         # PDF 로드 및 벡터스토어 생성
         documents = await load_pdfs_async(pdf_file_path)
-        vectorstore = create_vectorstore(documents, use_pinecone=False)  # 로컬로 예시
+        vectorstore = create_vectorstore(documents, use_pinecone=config.USE_PINECONE)
         # 벡터스토어 저장
         vectorstore.save_local(vectorstore_path)
 

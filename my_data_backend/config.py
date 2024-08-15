@@ -13,10 +13,14 @@ class Config(BaseSettings):
     DEBUG: bool = False
     REGION: str = "kr"
 
+    # Vectorstore
+    VECTOR_SEARCH_TOP_K: int = 5
+
     # LLM
     LLM_MODEL_NAME: str = "gpt-4o-mini"
 
     # Pinecone
+    USE_PINECONE: bool = False
     PINECONE_API_KEY: str
     PINECONE_ENV_REGION: str
     PINECONE_INDEX_NAME: str
