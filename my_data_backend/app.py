@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from _version import __version__
 from .config import config
 from .middlewares.custom_middle_wares import CustomMiddleware
+from .modules.history_manager import HistoryManager
 from .modules.pdf_loader import load_pdfs_async
 from .modules.prompt_template import PromptTemplateSingleton
 from .modules.rag_agent import RAGAgentSingleton
@@ -30,14 +31,15 @@ app = FastAPI(
 async def startup_event():
     from .routers.router import router
 
-    # 초기화 단계에서 벡터스토어 로드 및 agent 초기화
+    # vectorstore 로드, prompt template / history manager / agent 초기화
     vectorstore = await initialize_vectorstore()
     PromptTemplateSingleton().initialize()
+    HistoryManager()
 
     rag_agent = RAGAgentSingleton()
     rag_agent.initialize(
         vectorstore=vectorstore,
-        model_name=config.LLM_MODEL_NAME,
+        model_name=config.OPENAI_LLM_MODEL_NAME,
         top_k=config.VECTOR_SEARCH_TOP_K,
     )
 
