@@ -7,4 +7,6 @@ from .service import AgentService
 async def get_agent_query_answer(
     request: AgentQueryRequest, service: AgentService = Depends(AgentService)
 ) -> AgentQueryResponse:
-    return await service.get_agent_query_answer(request.query)
+    return await service.get_agent_query_answer(
+        device_id=request.deviceId, query=request.query
+    )

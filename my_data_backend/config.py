@@ -14,10 +14,11 @@ class Config(BaseSettings):
     REGION: str = "kr"
 
     # Vectorstore
-    VECTOR_SEARCH_TOP_K: int = 5
+    VECTOR_SEARCH_TOP_K: int = 3
 
     # LLM
-    LLM_MODEL_NAME: str = "gpt-4o-mini"
+    OPENAI_LLM_MODEL_NAME: str = "gpt-4o-mini"
+    MAX_HISTORY_NUM: int = 6
 
     # Pinecone
     USE_PINECONE: bool = False
