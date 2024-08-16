@@ -38,6 +38,7 @@ langchain-openai = "^0.1.21"
 pillow = "^10.4.0"
 transformers = "^4.44.0"
 torch = "2.2.0"
+python-multipart = "^0.0.9"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "*"
