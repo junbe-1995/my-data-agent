@@ -1,3 +1,5 @@
+import numpy as np
+import torch
 from langchain.embeddings.base import Embeddings
 from langchain_community.vectorstores import FAISS, Pinecone
 from transformers import CLIPProcessor, CLIPModel
@@ -6,21 +8,35 @@ from my_data_backend.config import config
 
 
 class CLIPImageEmbeddings(Embeddings):
-    def __init__(self, model_name="openai/clip-vit-base-patch32"):
+    def __init__(self, model_name="openai/clip-vit-base-patch16"):
         self.model = CLIPModel.from_pretrained(model_name)
         self.processor = CLIPProcessor.from_pretrained(model_name)
 
-    def embed(self, texts):
-        # 토큰 수를 77로 제한하여 텍스트 자르기
-        inputs = self.processor(
-            text=texts,
-            return_tensors="pt",
-            padding=True,
-            truncation=True,
-            max_length=77,
-        )
-        features = self.model.get_text_features(**inputs)
-        return features.detach().numpy()
+    def embed(self, texts, batch_size=32):
+        features = []
+        with torch.no_grad():  # 메모리 최적화
+            for i in range(0, len(texts), batch_size):
+                batch_texts = texts[i : i + batch_size]
+                inputs = self.processor(
+                    text=batch_texts,
+                    return_tensors="pt",
+                    padding=True,
+                    truncation=True,
+                    max_length=77,
+                )
+                batch_features = self.model.get_text_features(**inputs)
+
+                # 2차원으로 변환하여 numpy 배열로 변환
+                batch_features = (
+                    batch_features.view(batch_features.size(0), -1).detach().numpy()
+                )
+
+                # 1차원 배열로 변경
+                if batch_features.shape[0] == 1:
+                    batch_features = batch_features.squeeze(0)
+
+                features.append(batch_features)
+        return np.vstack(features)
 
     def embed_documents(self, texts):
         return self.embed(texts)
@@ -62,4 +78,5 @@ def load_vectorstore_by_clip(file_path: str, use_pinecone=False):
         vectorstore = FAISS.load_local(
             file_path, embeddings=embeddings, allow_dangerous_deserialization=True
         )
+
     return vectorstore
