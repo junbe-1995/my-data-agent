@@ -31,12 +31,11 @@ class CLIPImageEmbeddings(Embeddings):
                     batch_features.view(batch_features.size(0), -1).detach().numpy()
                 )
 
-                # 1차원 배열로 변경
-                if batch_features.shape[0] == 1:
-                    batch_features = batch_features.squeeze(0)
-
                 features.append(batch_features)
-        return np.vstack(features)
+        result = np.vstack(features)
+        if result.shape[0] == 1:
+            result = np.squeeze(result, axis=0)
+        return result
 
     def embed_documents(self, texts):
         return self.embed(texts)

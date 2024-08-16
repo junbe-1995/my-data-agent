@@ -54,6 +54,7 @@ async def startup_event():
 vectorstore_path = os.path.join(
     os.path.dirname(__file__), "vector_store/vectorstore.faiss"
 )
+# 멀티모달 검색을 위한 CLIP 벡터스토어 파일 경로
 vectorstore_path_by_clip = os.path.join(
     os.path.dirname(__file__), "vector_store/vectorstore_by_clip.faiss"
 )

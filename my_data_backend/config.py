@@ -32,5 +32,9 @@ class Config(BaseSettings):
     # Open AI
     OPENAI_API_KEY: str
 
+    # CLIP
+    KMP_DUPLICATE_LIB_OK: str
+    TOKENIZERS_PARALLELISM: str
+
 
 config = Config()
