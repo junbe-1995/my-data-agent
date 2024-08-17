@@ -1,6 +1,15 @@
 import os
 from typing import Optional, Type
-from distutils.util import strtobool
+
+
+def custom_strtobool(val: str) -> bool:
+    val = val.lower()
+    if val in ("y", "yes", "t", "true", "on", "1"):
+        return True
+    elif val in ("n", "no", "f", "false", "off", "0"):
+        return False
+    else:
+        raise ValueError(f"invalid truth value {val}")
 
 
 class MissingRequiredEnvironmentVariable(Exception):
@@ -29,6 +38,6 @@ def load_env(
             if str(env_val).upper() in ("TRUE", "YES", "Y", "T"):
                 return True
             else:
-                return bool(strtobool(str(env_val)))
+                return custom_strtobool(str(env_val))
         return as_type(env_val)
     return env_val

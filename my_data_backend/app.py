@@ -36,7 +36,6 @@ async def startup_event():
     from .routers.router import router
 
     # vectorstore 로드, prompt template / history manager / agent 초기화
-    # vectorstore = await initialize_vectorstore()
     vectorstore = await initialize_vectorstore()
     image_vectorstore = await initialize_vectorstore_by_clip()
     PromptTemplateSingleton().initialize()

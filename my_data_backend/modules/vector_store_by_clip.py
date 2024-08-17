@@ -8,7 +8,7 @@ from my_data_backend.config import config
 
 
 class CLIPImageEmbeddings(Embeddings):
-    def __init__(self, model_name="openai/clip-vit-base-patch16"):
+    def __init__(self, model_name=config.CLIP_MODEL_NAME):
         self.model = CLIPModel.from_pretrained(model_name)
         self.processor = CLIPProcessor.from_pretrained(model_name)
 
