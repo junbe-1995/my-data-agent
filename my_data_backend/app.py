@@ -61,7 +61,7 @@ vectorstore_path_by_clip = os.path.join(
     os.path.dirname(__file__), "vector_store/vectorstore_by_clip.faiss"
 )
 # PDF 파일 경로
-pdf_file_path = os.path.join(os.path.dirname(__file__), "pdf_files")
+pdf_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "pdf_files")
 
 
 async def initialize_vectorstore():
