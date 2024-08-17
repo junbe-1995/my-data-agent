@@ -2,7 +2,7 @@
 name = "my-data-agent"
 version = "0.1.0"
 description = ""
-authors = ["hjkim rlafbf222@naver.com"]
+authors = ["hjkim <rlafbf222@naver.com>"]
 readme = "README.md"
 packages = [
 ]
