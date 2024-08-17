@@ -1,9 +1,6 @@
 from __future__ import annotations
-
-import asyncio
-import threading
 from typing import Optional
-
+import asyncio
 from PIL import Image
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
@@ -16,13 +13,10 @@ from my_data_backend.modules.prompt_template import PromptTemplateSingleton
 
 class RAGAgentSingleton:
     _instance: Optional[RAGAgentSingleton] = None
-    _lock = threading.Lock()
 
     def __new__(cls, *args, **kwargs):
         if cls._instance is None:
-            with cls._lock:
-                if cls._instance is None:
-                    cls._instance = super(RAGAgentSingleton, cls).__new__(cls)
+            cls._instance = super(RAGAgentSingleton, cls).__new__(cls)
         return cls._instance
 
     def __init__(self):
@@ -37,34 +31,33 @@ class RAGAgentSingleton:
         top_k: int = 3,
         max_tokens: int = 1000,
     ):
-        with self._lock:
-            if not self._initialized:
-                # 벡터스토어 초기화
-                self.vectorstore = vectorstore
-                self.image_vectorstore = image_vectorstore
-                # history manager 초기화
-                self.history_manager = HistoryManager()
-                # ChatOpenAI 모델 초기화
-                self.llm = ChatOpenAI(
-                    model=model_name, temperature=0.3, max_tokens=max_tokens
-                )
-                # 프롬프트 템플릿 설정
-                prompt_template = PromptTemplateSingleton().get_template()
+        if not self._initialized:
+            # 벡터스토어 초기화
+            self.vectorstore = vectorstore
+            self.image_vectorstore = image_vectorstore
+            # history manager 초기화
+            self.history_manager = HistoryManager()
+            # ChatOpenAI 모델 초기화
+            self.llm = ChatOpenAI(
+                model=model_name, temperature=0.3, max_tokens=max_tokens
+            )
+            # 프롬프트 템플릿 설정
+            prompt_template = PromptTemplateSingleton().get_template()
 
-                # create_stuff_documents_chain을 이용해 CombineDocumentsChain 생성
-                combine_documents_chain = create_stuff_documents_chain(
-                    llm=self.llm, prompt=prompt_template
-                )
+            # create_stuff_documents_chain을 이용해 CombineDocumentsChain 생성
+            combine_documents_chain = create_stuff_documents_chain(
+                llm=self.llm, prompt=prompt_template
+            )
 
-                # create_retrieval_chain을 이용해 RAG 체인 생성
-                self.rag_chain = create_retrieval_chain(
-                    self.vectorstore.as_retriever(
-                        search_type="mmr", search_kwargs={"fetch_k": top_k}
-                    ),
-                    combine_documents_chain,
-                )
+            # create_retrieval_chain을 이용해 RAG 체인 생성
+            self.rag_chain = create_retrieval_chain(
+                self.vectorstore.as_retriever(
+                    search_type="mmr", search_kwargs={"fetch_k": top_k}
+                ),
+                combine_documents_chain,
+            )
 
-                self._initialized = True
+            self._initialized = True
 
     async def get_session_history(self, device_id: str):
         memory = await self.history_manager.get_or_create_memory(device_id, self.llm)
