@@ -27,12 +27,14 @@ class Config(BaseSettings):
     PINECONE_INDEX_NAME: str
 
     # Cohere
+    COHERE_MODEL_NAME: str = "multilingual-22-12"
     COHERE_API_KEY: str
 
     # Open AI
     OPENAI_API_KEY: str
 
     # CLIP
+    CLIP_MODEL_NAME: str = "openai/clip-vit-base-patch16"
     KMP_DUPLICATE_LIB_OK: str
     TOKENIZERS_PARALLELISM: str
 

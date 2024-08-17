@@ -7,7 +7,7 @@ from my_data_backend.utils.pinecone import PineconeSingleton
 
 def create_vectorstore(documents, use_pinecone=False):
     embeddings = CohereEmbeddings(
-        model="multilingual-22-12", cohere_api_key=config.COHERE_API_KEY
+        model=config.COHERE_MODEL_NAME, cohere_api_key=config.COHERE_API_KEY
     )
 
     if use_pinecone:
@@ -25,7 +25,7 @@ def create_vectorstore(documents, use_pinecone=False):
 
 def load_vectorstore(file_path: str, use_pinecone=False):
     embeddings = CohereEmbeddings(
-        model="multilingual-22-12", cohere_api_key=config.COHERE_API_KEY
+        model=config.COHERE_MODEL_NAME, cohere_api_key=config.COHERE_API_KEY
     )
 
     if use_pinecone:
