@@ -28,17 +28,17 @@ class HistoryManager:
             if not self._initialized:
                 self._initialized = True
 
-    def get_or_create_memory(self, device_id: str, llm: ChatOpenAI):
-        with self._lock:
-            if device_id not in self.user_history:
-                self.user_history[device_id] = ConversationSummaryMemory(
-                    llm=llm, memory_key="chat_history"
-                )
+    async def get_or_create_memory(self, device_id: str, llm: ChatOpenAI):
+        # 디바이스 아이디는 사용자 별 고유한 값으로, 동시 다발적인 요청은 예상되지 않으므로, 해당 부분 lock 처리는 생략
+        if device_id not in self.user_history:
+            self.user_history[device_id] = ConversationSummaryMemory(
+                llm=llm, memory_key="chat_history"
+            )
 
-            memory = self.user_history[device_id]
+        memory = self.user_history[device_id]
 
-            # 히스토리 개수를 제한
-            while len(memory.chat_memory.messages) > config.MAX_HISTORY_NUM:
-                memory.chat_memory.messages.pop(0)
+        # 히스토리 개수를 제한
+        while len(memory.chat_memory.messages) > config.MAX_HISTORY_NUM:
+            memory.chat_memory.messages.pop(0)
 
         return memory

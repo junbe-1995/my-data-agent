@@ -11,5 +11,7 @@ class AgentService:
         self, device_id: str, query: str = None, image: Image.Image = None
     ) -> AgentQueryResponse:
         # 인퍼런스 메서드에 query와 image를 모두 넘깁니다.
-        answer = self.rag_agent.inference(device_id=device_id, query=query, image=image)
+        answer = await self.rag_agent.inference(
+            device_id=device_id, query=query, image=image
+        )
         return AgentQueryResponse(answer=answer)
