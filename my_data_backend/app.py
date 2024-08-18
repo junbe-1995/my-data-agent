@@ -64,6 +64,7 @@ async def startup_event():
         image_vectorstore=image_vectorstore,
         model_name=config.OPENAI_LLM_MODEL_NAME,
         top_k=config.VECTOR_SEARCH_TOP_K,
+        max_tokens=config.OPENAI_MAX_TOKENS,
     )
 
     app.include_router(router)

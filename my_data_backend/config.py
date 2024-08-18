@@ -32,6 +32,7 @@ class Config(BaseSettings):
 
     # Open AI
     OPENAI_API_KEY: str
+    OPENAI_MAX_TOKENS: int = 1000
 
     # CLIP
     CLIP_MODEL_NAME: str = "openai/clip-vit-base-patch16"
