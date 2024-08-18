@@ -1,5 +1,4 @@
 import io
-
 from PIL import Image
 from fastapi import Depends, UploadFile, File, Form
 
@@ -10,12 +9,35 @@ from .service import AgentService
 async def get_agent_query_answer(
     deviceId: str = Form(...),
     query: str = Form(...),
-    file: UploadFile = File(None),
+    imageFile: UploadFile = File(None),
     service: AgentService = Depends(AgentService),
 ) -> AgentQueryResponse:
+    """
+    MyData RAG Agent Query API.
+
+    입력 쿼리 및 이미지 파일을 기반으로 retrieval 된 document를 바탕으로 생성한 답변을 반환합니다.
+
+    Args:
+
+        deviceId (str):
+            사용자를 구분할 수 있는 고유한 필드로, 해당 아이디를 기준으로 히스토리가 생성 및 관리됩니다.
+
+        query (str):
+            사용자의 쿼리 텍스트 필드입니다.
+            이 필드는 사용자가 알고자 하는 정보나 질문을 포함합니다.
+
+        imageFile (UploadFile, optional):
+            멀티 모달 검색에 활용될 이미지 파일 필드입니다.
+            이미지 파일이 제공된 경우, 이미지에서 정보를 추출하여 쿼리와 함께 처리됩니다.
+
+    Returns:
+
+        AgentQueryResponse: 생성된 답변이 포함된 응답 객체입니다.
+    """
+
     image = None
-    if file is not None:
-        image_bytes = await file.read()
+    if imageFile is not None:
+        image_bytes = await imageFile.read()
         image = Image.open(io.BytesIO(image_bytes))
 
     return await service.get_agent_query_answer(

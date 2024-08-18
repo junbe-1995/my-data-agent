@@ -30,28 +30,6 @@ app = FastAPI(
 )
 
 
-# Run at app startup
-@app.on_event("startup")
-async def startup_event():
-    from .routers.router import router
-
-    # vectorstore 로드, prompt template / history manager / agent 초기화
-    vectorstore = await initialize_vectorstore()
-    image_vectorstore = await initialize_vectorstore_by_clip()
-    PromptTemplateSingleton().initialize()
-    HistoryManager()
-
-    rag_agent = RAGAgentSingleton()
-    rag_agent.initialize(
-        vectorstore=vectorstore,
-        image_vectorstore=image_vectorstore,
-        model_name=config.OPENAI_LLM_MODEL_NAME,
-        top_k=config.VECTOR_SEARCH_TOP_K,
-    )
-
-    app.include_router(router)
-
-
 # 벡터스토어 파일 경로
 vectorstore_path = os.path.join(
     os.path.dirname(__file__), "vector_store/vectorstore.faiss"
@@ -64,45 +42,52 @@ vectorstore_path_by_clip = os.path.join(
 pdf_file_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "pdf_files")
 
 
-async def initialize_vectorstore():
-    # 벡터스토어가 이미 존재하는지 확인
-    if os.path.exists(vectorstore_path):
-        # 기존 벡터스토어 로드
-        vectorstore = load_vectorstore(
-            vectorstore_path, use_pinecone=config.USE_PINECONE
-        )
-    else:
-        # PDF 로드 및 벡터스토어 생성
-        documents = await load_pdfs_async(pdf_file_path)
-        vectorstore = create_vectorstore(documents, use_pinecone=config.USE_PINECONE)
-        # 벡터스토어 저장
-        vectorstore.save_local(vectorstore_path)
+# Run at app startup
+@app.on_event("startup")
+async def startup_event():
+    from .routers.router import router
 
-    return vectorstore
+    # vectorstore 로드, prompt template / history manager / agent 초기화
+    vectorstore = await initialize_vectorstore(
+        vectorstore_path, load_vectorstore, create_vectorstore
+    )
+    image_vectorstore = await initialize_vectorstore(
+        vectorstore_path_by_clip, load_vectorstore_by_clip, create_vectorstore_by_clip
+    )
 
+    PromptTemplateSingleton().initialize()
+    HistoryManager()
 
-async def initialize_vectorstore_by_clip():
-    # 벡터스토어가 이미 존재하는지 확인
-    if os.path.exists(vectorstore_path_by_clip):
-        # 기존 벡터스토어 로드
-        vectorstore = load_vectorstore_by_clip(
-            vectorstore_path_by_clip, use_pinecone=config.USE_PINECONE
-        )
-    else:
-        # PDF 로드 및 벡터스토어 생성
-        documents = await load_pdfs_async(pdf_file_path)
-        vectorstore = create_vectorstore_by_clip(
-            documents, use_pinecone=config.USE_PINECONE
-        )
-        # 벡터스토어 저장
-        vectorstore.save_local(vectorstore_path_by_clip)
+    rag_agent = RAGAgentSingleton()
+    rag_agent.initialize(
+        vectorstore=vectorstore,
+        image_vectorstore=image_vectorstore,
+        model_name=config.OPENAI_LLM_MODEL_NAME,
+        top_k=config.VECTOR_SEARCH_TOP_K,
+        max_tokens=config.OPENAI_MAX_TOKENS,
+    )
 
-    return vectorstore
+    app.include_router(router)
 
 
 app.add_middleware(
     CustomMiddleware,
 )
+
+
+async def initialize_vectorstore(path, load_func, create_func):
+    # 벡터스토어가 이미 존재하는지 확인
+    if os.path.exists(path):
+        # 기존 벡터스토어 로드
+        vectorstore = load_func(path, use_pinecone=config.USE_PINECONE)
+    else:
+        # PDF 로드 및 벡터스토어 생성
+        documents = await load_pdfs_async(pdf_file_path)
+        vectorstore = create_func(documents, use_pinecone=config.USE_PINECONE)
+        # 벡터스토어 저장
+        vectorstore.save_local(path)
+
+    return vectorstore
 
 
 class AppInfoData(BaseModel):

@@ -27,11 +27,12 @@ class Config(BaseSettings):
     PINECONE_INDEX_NAME: str
 
     # Cohere
-    COHERE_MODEL_NAME: str = "multilingual-22-12"
+    COHERE_MODEL_NAME: str = "embed-multilingual-v3.0"
     COHERE_API_KEY: str
 
     # Open AI
     OPENAI_API_KEY: str
+    OPENAI_MAX_TOKENS: int = 1000
 
     # CLIP
     CLIP_MODEL_NAME: str = "openai/clip-vit-base-patch16"

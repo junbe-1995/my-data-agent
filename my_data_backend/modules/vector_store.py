@@ -5,7 +5,7 @@ from langchain_cohere import CohereEmbeddings
 from langchain_community.vectorstores import FAISS, Pinecone
 
 from my_data_backend.config import config
-from my_data_backend.utils.pinecone import PineconeSingleton
+from my_data_backend.modules.pinecone import PineconeSingleton
 
 
 class CohereEmbeddingsForAsync(CohereEmbeddings):
