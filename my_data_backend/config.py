@@ -27,7 +27,7 @@ class Config(BaseSettings):
     PINECONE_INDEX_NAME: str
 
     # Cohere
-    COHERE_MODEL_NAME: str = "multilingual-22-12"
+    COHERE_MODEL_NAME: str = "embed-multilingual-v3.0"
     COHERE_API_KEY: str
 
     # Open AI
