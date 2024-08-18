@@ -33,6 +33,13 @@
 ```
 
 ## 참고 사항
+```
+사용 모델은 아래와 같으며, 환경변수로 관리중입니다.
+
+LLM : gpt-4o-mini
+Embedding : embed-multilingual-v3.0 / CLIP (openai/clip-vit-base-patch16)
+
+```
 - vector store 는 로컬에 저장되어 있으며
   - mydata_backend/vector_store
 - 이 후 Pinecone으로 저장소 이전 시 config 에서 환경 변수를 변경하면 됩니다.
@@ -44,4 +51,3 @@
   - 이원화하여 관리중입니다.
     - 사용자의 텍스트 쿼리는 cohere의 embed-multilingual-v3.0 모델을 기반으로 document retrieval을 수행하며,
     - 사용자의 이미지 쿼리는 CLIP 모델을 기반으로 document retrieval을 수행합니다.
-- llm 모델은 gpt-4o-mini 모델을 사용중이며, config에서 환경변수로 관리중입니다.
