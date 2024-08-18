@@ -32,16 +32,16 @@ class RAGAgentSingleton:
         max_tokens: int = 1000,
     ):
         if not self._initialized:
-            # 벡터스토어 초기화
+            # 싱글톤 벡터스토어 할당
             self.vectorstore = vectorstore
             self.image_vectorstore = image_vectorstore
-            # history manager 초기화
+            # 싱글톤 history manager 할당
             self.history_manager = HistoryManager()
             # ChatOpenAI 모델 초기화
             self.llm = ChatOpenAI(
                 model=model_name, temperature=0.3, max_tokens=max_tokens
             )
-            # 프롬프트 템플릿 설정
+            # 싱글톤 프롬프트 템플릿 할당
             prompt_template = PromptTemplateSingleton().get_template()
 
             # create_stuff_documents_chain을 이용해 CombineDocumentsChain 생성
