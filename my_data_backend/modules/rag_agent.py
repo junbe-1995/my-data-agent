@@ -59,27 +59,6 @@ class RAGAgentSingleton:
 
             self._initialized = True
 
-    async def get_session_history(self, device_id: str):
-        memory = await self.history_manager.get_or_create_memory(device_id, self.llm)
-        return memory.chat_memory
-
-    async def get_documents_by_image(self, image):
-        # 이미지 임베딩 생성
-        image_embedding = await asyncio.get_event_loop().run_in_executor(
-            None,
-            lambda: self.image_vectorstore.embedding_function.embed_query(image=image),
-        )
-
-        # FAISS 벡터 스토어에서 유사 문서 검색
-        image_documents = await asyncio.get_event_loop().run_in_executor(
-            None,
-            lambda: self.image_vectorstore.similarity_search_by_vector(
-                image_embedding, top_k=2
-            ),
-        )
-
-        return image_documents
-
     async def inference(
         self, device_id: str, query: str = None, image: Image.Image = None
     ):
@@ -89,12 +68,12 @@ class RAGAgentSingleton:
             )
 
         # 사용자별 메모리 가져오기
-        memory = await self.get_session_history(device_id)
+        memory = await self._get_session_history(device_id)
 
         # 이미지 입력이 존재하는 경우 CLIP 기반 벡터스토어에서 문서 검색 후 추가
         retrieved_documents_by_image = []
         if image:
-            image_documents = await self.get_documents_by_image(image)
+            image_documents = await self._get_documents_by_image(image)
             retrieved_documents_by_image.extend(image_documents[:2])
         source_documents_by_image = [
             doc.page_content for doc in retrieved_documents_by_image
@@ -119,3 +98,24 @@ class RAGAgentSingleton:
             raise ValueError("Unexpected response format from the chain.")
 
         return response.get("answer")
+
+    async def _get_session_history(self, device_id: str):
+        memory = await self.history_manager.get_or_create_memory(device_id, self.llm)
+        return memory.chat_memory
+
+    async def _get_documents_by_image(self, image):
+        # 이미지 임베딩 생성
+        image_embedding = await asyncio.get_event_loop().run_in_executor(
+            None,
+            lambda: self.image_vectorstore.embedding_function.embed_query(image=image),
+        )
+
+        # FAISS 벡터 스토어에서 유사 문서 검색
+        image_documents = await asyncio.get_event_loop().run_in_executor(
+            None,
+            lambda: self.image_vectorstore.similarity_search_by_vector(
+                image_embedding, top_k=2
+            ),
+        )
+
+        return image_documents

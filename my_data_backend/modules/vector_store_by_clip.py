@@ -63,7 +63,7 @@ def create_vectorstore_by_clip(documents, use_pinecone=False):
     embeddings = CLIPImageEmbeddings()
 
     if use_pinecone:
-        from my_data_backend.utils.pinecone import PineconeSingleton
+        from my_data_backend.modules.pinecone import PineconeSingleton
 
         pinecone_singleton = PineconeSingleton()
         pinecone_singleton.initialize()
