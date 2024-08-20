@@ -22,9 +22,9 @@ class Config(BaseSettings):
 
     # Pinecone
     USE_PINECONE: bool = False
-    PINECONE_API_KEY: str
-    PINECONE_ENV_REGION: str
-    PINECONE_INDEX_NAME: str
+    PINECONE_API_KEY: str = "your_pinecone_api_key"
+    PINECONE_ENV_REGION: str = "your_pinecone_env_region"
+    PINECONE_INDEX_NAME: str = "your_pinecone_index_name"
 
     # Cohere
     COHERE_MODEL_NAME: str = "embed-multilingual-v3.0"
