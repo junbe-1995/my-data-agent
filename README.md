@@ -7,11 +7,15 @@
 ![img.png](img.png)
 * 출처: LangChain
 
+---
+
 ## API docs
 - 실행 환경의 로컬에서 9001번 포트로 서버가 실행됩니다.
 - api docs 는 /api/docs 로 접근 가능하며, 아래와 같이 확인 가능합니다.
 ![img_1.png](img_1.png)
 
+
+---
 
 ## 주요 기능 및 구현 상세
 - LangChain 활용
@@ -48,6 +52,7 @@ from langchain_openai import ChatOpenAI
     - 대화 히스토리를 관리하기 위해 ConversationSummaryMemory를 활용했습니다. 
     - 해당 클래스는 대화의 중요 부분을 요약하여 저장하므로, 모델의 토큰 제한을 완화할 수 있습니다.
 
+---
 
 ## project setting 방법
 ```
@@ -73,6 +78,7 @@ from langchain_openai import ChatOpenAI
 
 ```
 
+---
 
 ## 참고 사항
 ```
