@@ -13,6 +13,42 @@
 ![img_1.png](img_1.png)
 
 
+## 주요 기능 및 구현 상세
+- LangChain 활용
+```python
+from langchain.embeddings.base import Embeddings
+from langchain_community.vectorstores import FAISS, Pinecone
+from langchain.chains import create_retrieval_chain
+from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain.memory import ConversationSummaryMemory
+from langchain_core.runnables.history import RunnableWithMessageHistory
+from langchain_openai import ChatOpenAI
+```
+- 멀티턴 에이전트
+  - 히스토리 매니저 싱글톤 모듈:
+    - 멀티턴 대화에서의 맥락을 유지하기 위해 히스토리 매니저를 싱글톤 패턴으로 구현했습니다.
+    - 이를 통해 동일한 디바이스 아이디로부터 들어온 요청에 대해 대화 히스토리를 관리하고, 이를 바탕으로 답변을 생성합니다.
+- 멀티모달 지원
+  - 이미지 쿼리 처리:
+    - 이미지가 쿼리로 들어올 경우, CLIP 모델을 사용해 이미지를 임베딩하고, 이를 바탕으로 추가적인 문서 리트리벌을 수행한 뒤, 결과를 함께 반환합니다.
+- 확장 가능한 프로젝트 구조
+  - 모듈화 및 싱글톤 패턴 사용:
+    - 프로젝트에 필요한 기능들을 모듈화하여, 각 모듈이 독립적으로 관리되고 수정될 수 있도록 설계했습니다.
+    - 환경 변수 관리:
+      - 로컬 벡터스토어(FAISS)와 클라우드 기반 벡터스토어(Pinecone)를 쉽게 전환할 수 있도록 했습니다.
+      - LLM(대형 언어 모델)의 맥스 토큰 설정, 벡터스토어에서 검색할 top K 개수 등의 설정을 환경 변수로 관리할 수 있게 했습니다.
+    - 의존성 주입:
+      - 예를 들어, CLIP 모델이나 코히어 임베딩 모델을 쉽게 교체하여 사용할 수 있도록 app.py에서 의존성을 주입하는 방식으로 유연하게 구성했습니다.
+- 동시성 처리
+  - AsyncIO 락 사용:
+    - 동일 디바이스 아이디에서 동시에 여러 요청이 들어올 때, 히스토리의 일관성을 유지하기 위해 AsyncIO의 Lock을 활용하여 동시성 문제를 해결했습니다. 
+    - 이를 통해 히스토리 순서가 섞이는 문제를 방지합니다.
+- 모델 토큰 제한 해결
+  - ConversationSummaryMemory 사용:
+    - 대화 히스토리를 관리하기 위해 ConversationSummaryMemory를 활용했습니다. 
+    - 해당 클래스는 대화의 중요 부분을 요약하여 저장하므로, 모델의 토큰 제한을 완화할 수 있습니다.
+
+
 ## project setting 방법
 ```
 
@@ -36,6 +72,7 @@
     $ python run_my_data_backend.py
 
 ```
+
 
 ## 참고 사항
 ```
