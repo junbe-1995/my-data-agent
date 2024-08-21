@@ -11,7 +11,7 @@ class Config(BaseSettings):
     STAGE: str = "dev"
     APP_NAME: str = "my_data_backend"
     DEBUG: bool = False
-    REGION: str = "kr"
+    LOG_LEVEL: str = "info"
 
     # Vectorstore
     VECTOR_SEARCH_TOP_K: int = 3

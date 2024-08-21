@@ -72,9 +72,17 @@ from langchain_openai import ChatOpenAI
         KMP_DUPLICATE_LIB_OK=TRUE
         TOKENIZERS_PARALLELISM=false
    
-4. 루트 디렉토리의 run_my_data_backend.py 실행
+4. 간단한 동작 확인 및 디버깅 시 루트 디렉토리의 run_my_data_backend.py 실행
 
     $ python run_my_data_backend.py
+
+5. 단, 운영 환경 혹은 비슷한 환경에서 테스트가 필요하다면,
+   my_data_backend에 있는 gunicorn.conf.py 파일을 통해 멀티 프로세스로 띄우는 것을 권장합니다.
+    
+    $ gunicorn -c my_data_backend/gunicorn.conf.py
+    
+    # objc fork safety 관련 에러 발생 시 아래와 같이 실행
+    $ OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES gunicorn -c my_data_backend/gunicorn.conf.py
 
 ```
 

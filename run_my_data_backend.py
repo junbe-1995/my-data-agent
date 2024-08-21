@@ -11,7 +11,7 @@ if __name__ == "__main__":
             port=9001,
             log_level="debug",
             workers=1,
-            loop="asyncio",
+            loop="uvloop",
         )
     else:
         uvicorn.run("my_data_backend:app", host="0.0.0.0", port=9001)
