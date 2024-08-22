@@ -63,6 +63,8 @@ from langchain_openai import ChatOpenAI
 
 2. interpreter 설정
 
+    path: my-data-agent/.venv/bin/python
+
 3. 필수 환경 변수 파일 (.env) 생성
     
     my_data_backend 디렉토리에 .env 파일 생성 후 아래 필수 필드 추가
@@ -79,7 +81,7 @@ from langchain_openai import ChatOpenAI
     
     $ gunicorn -c my_data_backend/gunicorn.conf.py
     
-    # objc fork safety 관련 에러 발생 시 아래와 같이 실행
+    # objc fork safety 관련 에러 발생 시 아래와 같이 실행 합니다.
     $ OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES gunicorn -c my_data_backend/gunicorn.conf.py
 
 ```
