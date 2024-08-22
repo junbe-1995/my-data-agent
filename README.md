@@ -11,7 +11,7 @@
 
 ## API docs
 - 실행 환경의 로컬에서 9001번 포트로 서버가 실행됩니다.
-- api docs 는 /api/docs 로 접근 가능하며, 아래와 같이 확인 가능합니다.
+- api docs 는 [/api/docs](http://localhost:9001/api/docs) 로 접근 가능하며, 아래와 같이 확인 가능합니다.
 ![img_1.png](img_1.png)
 
 
