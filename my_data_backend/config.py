@@ -1,7 +1,11 @@
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv
 from os.path import dirname, join
+import os
 
+
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+os.environ["TOKENIZERS_PARALLELISM"] = "FALSE"
 
 dotenv_path = join(dirname(__file__), "./", ".env")
 load_dotenv(dotenv_path)
@@ -36,8 +40,6 @@ class Config(BaseSettings):
 
     # CLIP
     CLIP_MODEL_NAME: str = "openai/clip-vit-base-patch16"
-    KMP_DUPLICATE_LIB_OK: str
-    TOKENIZERS_PARALLELISM: str
 
 
 config = Config()

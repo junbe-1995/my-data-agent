@@ -69,8 +69,6 @@ from langchain_openai import ChatOpenAI
     
         COHERE_API_KEY=your_cohere_api_key
         OPENAI_API_KEY=your_openai_api_key
-        KMP_DUPLICATE_LIB_OK=TRUE
-        TOKENIZERS_PARALLELISM=false
    
 4. 간단한 동작 확인 및 디버깅 시 루트 디렉토리의 run_my_data_backend.py 실행
 
