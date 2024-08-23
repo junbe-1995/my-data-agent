@@ -13,7 +13,8 @@
 - 실행 환경의 로컬에서 9001번 포트로 서버가 실행됩니다.
 - api docs 는 [/api/docs](http://localhost:9001/api/docs) 로 접근 가능하며, 아래와 같이 확인 가능합니다.
 - path: /api/agent/query
-<img width="1471" alt="image" src="https://github.com/user-attachments/assets/164b461a-c372-472a-87b5-f21bdf5f193e">
+<img width="1492" alt="image" src="https://github.com/user-attachments/assets/cf050ec2-c7ff-4e58-9f21-4d8e0b32ea30">
+
 
 
 ---
