@@ -68,18 +68,22 @@ from langchain_openai import ChatOpenAI
 
     path: my-data-agent/.venv/bin/python
 
-3. 필수 환경 변수 파일 (.env) 생성
+3. 가상환경 활성화
+
+    $ source .venv/bin/activate
+
+4. 필수 환경 변수 파일 (.env) 생성
     
     my_data_backend 디렉토리에 .env 파일 생성 후 아래 필수 필드 추가
     
         COHERE_API_KEY=your_cohere_api_key
         OPENAI_API_KEY=your_openai_api_key
    
-4. 간단한 동작 확인 및 디버깅 시 루트 디렉토리의 run_my_data_backend.py 실행
+5. 간단한 동작 확인 및 디버깅 시 루트 디렉토리의 run_my_data_backend.py 실행
 
     $ python run_my_data_backend.py
 
-5. 단, 운영 환경 혹은 비슷한 환경에서 테스트가 필요하다면,
+6. 단, 운영 환경 혹은 비슷한 환경에서 테스트가 필요하다면,
    my_data_backend에 있는 gunicorn.conf.py 파일을 통해 멀티 프로세스로 띄우는 것을 권장합니다.
     
     $ gunicorn -c my_data_backend/gunicorn.conf.py
